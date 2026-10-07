@@ -85,3 +85,26 @@ Please report vulnerabilities to [security@typo3.org](mailto:security@typo3.org)
 
 The included file with the top 100.000 popular passwords has been downloaded
 from https://github.com/danielmiessler/SecLists
+
+## Dialoop fork: optional frontend login
+
+This fork starts from upstream `derhansen/add_pwd_policy` tag `2.0.1`
+(commit `1219998760b153524b4a923d3ef57ed2d68b94d9`). Release `2.0.1.1`
+only moves `typo3/cms-felogin` from Composer `require` to `suggest`.
+All upstream runtime code, validator settings, password denylist and code-quality
+workflow remain unchanged. Backend password policies retain all validators.
+Frontend password recovery context integration remains available when FELogin is installed.
+
+The upstream package name remains `derhansen/add_pwd_policy`; consuming projects
+select this fork through an explicit VCS repository. No Core package is replaced.
+
+Local compatibility check against the FGS baseline (PHP 8.2 or newer):
+
+```sh
+php Tests/OptionalFrontendLoginPolicyTest.php /path/to/typo3-project /path/to/typo3-diabaseline
+```
+
+This test excludes FELogin from autoloading in its isolated PHP process, loads this
+fork's unchanged PHP classes, checks the four baseline validators and rejects
+username-derived and denylisted passwords. It does not modify data or contact the
+Pwned Passwords service.
